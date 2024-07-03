@@ -1,0 +1,22 @@
+{
+  "name": "pnpm-ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"electron ./electron.js\"",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.13.6",
+    "concurrently": "^8.2.2",
+    "electron": "^31.1.0",
+    "solid-js": "^1.8.17"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.3.1",
+    "vite-plugin-solid": "^2.10.2"
+  }
+}

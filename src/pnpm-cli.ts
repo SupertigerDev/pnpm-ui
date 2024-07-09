@@ -1,48 +1,32 @@
-const child_process = require("child_process")
+const child_process = window.require("child_process") as typeof import("child_process");
 
+const getCache = (dir: string) => JSON.parse(localStorage.getItem("outdated-cache-" + dir) || "null") as Record<string, Outdated> | null;
 
-outdated("E:\\Nerimity\\nerimity-web\\").then(console.log)
+const setCache = (dir: string, data: string) => localStorage.setItem("outdated-cache-" + dir, data)
 
-async function outdated (dirname) {
+export interface Outdated {
+    current: string,
+    latest: string,
+    wanted: string,
+    isDeprecated: boolean,
+    dependencyType: "devDependencies" | "dependencies"
+}
+
+export async function fetchOutdated (dirname: string) {
+    const cache = getCache(dirname)
+    if (cache) return cache;
 
     const rawOutdated = await runOutdated(dirname);
-    return parsedOutdated(rawOutdated)
+    setCache(dirname, rawOutdated);
+    return JSON.parse(rawOutdated) as Record<string, Outdated>
 }
 
 
-function runOutdated (dirname) {
-    return new Promise(response => {
-        const result = child_process.exec(`pnpm outdated`, {cwd: dirname})
-        result.stdout.on("data", (data) => {
+function runOutdated (dirname: string) {
+    return new Promise<string>(response => {
+        const result = child_process.exec(`pnpm outdated --format json`, {cwd: dirname})
+        result.stdout?.on("data", (data) => {
             response(data)
         })
     })
-}
-
-/**
- * Parse the outdated package information from a string.
- *
- * @param {string} str - The input string containing outdated package information.
- * @return {{package: string, current: string, latest: string, type: "dev" | undefined}[]} An array of objects containing package, current version, and latest version.
- */
-function parsedOutdated (str) {
-    const lines = str.split("\n")
-    let result = [] 
-    for (let index = 2; index < lines.length; index++) {
-        const line = lines[index];
-        const split = line.split("│").map(x => x.trim()).filter(x => x)
-        if (split.length <= 1) continue;
-
-        const package = split[0].split(" ");
-        const type = package[1]?.substring(1, package[1].length - 1);
-
-        result.push({
-            package: package[0],
-            type,
-            current: split[1],
-            latest: split[2]
-        });
-    }
-    
-    return result;
 }

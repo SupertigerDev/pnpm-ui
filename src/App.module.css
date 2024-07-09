@@ -16,7 +16,7 @@
     text-decoration: none;
 }
 .drawer .link.selected {
-    background-color: rgb(93, 168, 255);
+    background-color: var(--primary-color);
 }
 
 .projectView {
@@ -46,10 +46,13 @@
 }
 .package {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
     background-color: rgba(255, 255, 255, 0.15);
     padding: 6px;
     padding-left: 12px;
+
+    
     &:first-child {
         border-top-left-radius: 6px;
         border-top-right-radius: 6px;
@@ -59,11 +62,46 @@
         border-bottom-right-radius: 6px;
     }
 }
+
+.package .info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    white-space: nowrap;
+}
+
 .package .name {
 
 }
 .package .version {
     opacity: 0.6;
     font-size: 12px;
+}
 
+.package .outdated {
+    display: flex;
+    gap: 6px;
+    justify-content: end;
+    align-items: center;
+    flex: 1;
+    white-space: nowrap;
+
+}
+.outdated .newVersion {
+    opacity: 0.6;
+}
+
+
+.button {
+    border-radius: 6px;
+    border: none;
+    padding: 6px;
+    background-color: var(--primary-color);
+    cursor: pointer;
+}
+
+.button.disabled {
+    background-color: transparent;
+    border: solid 1px rgba(255, 255, 255, 0.2);
+    cursor: none;
 }
